@@ -1,0 +1,2 @@
+DELETE FROM IndexLab
+WHERE Id = 200001;
