@@ -1,0 +1,10 @@
+main {
+  font-family: system-ui, sans-serif;
+  padding: 2rem 1rem;
+}
+
+h1 {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
