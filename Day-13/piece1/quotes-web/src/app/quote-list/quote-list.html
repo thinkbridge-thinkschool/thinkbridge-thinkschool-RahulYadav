@@ -1,0 +1,35 @@
+<section class="quote-list">
+  <header class="toolbar">
+    <div class="pagination">
+      <button type="button" (click)="previousPage()" [disabled]="page() === 1">Previous</button>
+      <span class="page-info">{{ pageInfo() }}</span>
+      <button type="button" (click)="nextPage()" [disabled]="!hasNextPage()">Next</button>
+    </div>
+
+    <label class="page-size">
+      Per page
+      <select [value]="pageSize()" (change)="changePageSize(+$any($event.target).value)">
+        <option [value]="5">5</option>
+        <option [value]="10">10</option>
+        <option [value]="20">20</option>
+      </select>
+    </label>
+  </header>
+
+  @if (loading()) {
+    <p class="state state-loading">Loading quotes…</p>
+  } @else if (error()) {
+    <p class="state state-error">{{ error() }}</p>
+  } @else if (quotes().length === 0) {
+    <p class="state state-empty">No quotes found for this page.</p>
+  } @else {
+    <ul class="quotes">
+      @for (quote of quotes(); track quote.id) {
+        <li class="quote">
+          <blockquote>&ldquo;{{ quote.text }}&rdquo;</blockquote>
+          <p class="author">— {{ quote.author }} <span class="id">(#{{ quote.id }})</span></p>
+        </li>
+      }
+    </ul>
+  }
+</section>
