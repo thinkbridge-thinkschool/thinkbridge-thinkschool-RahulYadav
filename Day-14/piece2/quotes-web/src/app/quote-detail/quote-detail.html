@@ -1,0 +1,27 @@
+<section class="quote-detail">
+  @switch (true) {
+    @case (selectedId() === null) {
+      <p class="state state-empty">Select a quote from the list to see its details.</p>
+    }
+    @case (loading()) {
+      <p class="state state-loading">Loading quote #{{ selectedId() }}…</p>
+    }
+    @case (!!error()) {
+      <p class="state state-error">{{ error() }}</p>
+    }
+    @default {
+      @if (quote()) {
+        <article class="quote-card">
+          <blockquote>&ldquo;{{ quote()!.text }}&rdquo;</blockquote>
+          <p class="author">— {{ quote()!.author }}</p>
+          <dl class="meta">
+            <dt>Id</dt>
+            <dd>{{ quote()!.id }}</dd>
+            <dt>Deleted</dt>
+            <dd>{{ quote()!.isDeleted }}</dd>
+          </dl>
+        </article>
+      }
+    }
+  }
+</section>
