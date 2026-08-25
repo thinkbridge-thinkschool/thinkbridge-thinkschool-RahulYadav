@@ -1,0 +1,58 @@
+<section class="quote-create">
+  <h2 id="quote-create-heading">Add a quote</h2>
+
+  <form
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+    novalidate
+    aria-labelledby="quote-create-heading"
+    [attr.aria-busy]="submitting() ? 'true' : null"
+  >
+    <div class="field">
+      <label for="quote-author">Author</label>
+      <input
+        id="quote-author"
+        type="text"
+        formControlName="author"
+        #authorInput
+        [attr.aria-invalid]="author.invalid && author.touched ? 'true' : null"
+        [attr.aria-describedby]="author.invalid && author.touched ? 'quote-author-error' : null"
+      />
+      @if (author.invalid && author.touched) {
+        <p class="field-error" id="quote-author-error">
+          <span class="field-error-icon" aria-hidden="true">&#9888;</span>
+          Error: {{ authorErrorMessage() }}
+        </p>
+      }
+    </div>
+
+    <div class="field">
+      <label for="quote-text">Text</label>
+      <textarea
+        id="quote-text"
+        rows="4"
+        formControlName="text"
+        #textInput
+        [attr.aria-invalid]="text.invalid && text.touched ? 'true' : null"
+        [attr.aria-describedby]="text.invalid && text.touched ? 'quote-text-error' : null"
+      ></textarea>
+      @if (text.invalid && text.touched) {
+        <p class="field-error" id="quote-text-error">
+          <span class="field-error-icon" aria-hidden="true">&#9888;</span>
+          Error: {{ textErrorMessage() }}
+        </p>
+      }
+    </div>
+
+    @if (submitError()) {
+      <p class="field-error submit-error" id="quote-create-error" role="alert">
+        <span class="field-error-icon" aria-hidden="true">&#9888;</span>
+        Error: {{ submitError() }}
+      </p>
+    }
+
+    <button type="submit" [disabled]="submitting()">
+      {{ submitting() ? 'Adding…' : 'Add quote' }}
+    </button>
+  </form>
+</section>
