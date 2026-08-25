@@ -1,0 +1,65 @@
+.quote-detail {
+  min-width: 0;
+}
+
+.state {
+  padding: 2rem 1.25rem;
+  text-align: center;
+  color: var(--text-dim);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+}
+
+.state-error {
+  color: var(--danger);
+  background: var(--danger-soft);
+  border-color: rgba(255, 107, 129, 0.35);
+}
+
+.quote-card {
+  border: 1px solid var(--border);
+  background: linear-gradient(160deg, var(--surface-2), var(--surface));
+  border-radius: var(--radius);
+  padding: 1.25rem 1.4rem;
+}
+
+.quote-card blockquote {
+  margin: 0 0 0.9rem 0;
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.author {
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+  color: var(--accent-strong);
+  font-size: 0.9rem;
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 0.75rem;
+  margin: 0;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.82rem;
+}
+
+.meta dt {
+  font-weight: 600;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.7rem;
+  align-self: center;
+}
+
+.meta dd {
+  margin: 0;
+  color: var(--text-dim);
+}
