@@ -1,0 +1,27 @@
+<div class="shell">
+  <header class="shell-header">
+    <span class="eyebrow">QuotesApi</span>
+    <h1>{{ title() }}</h1>
+
+    @if (auth.isAuthenticated()) {
+      <div class="auth-status">
+        <span>Signed in as {{ auth.email() }}</span>
+        <button type="button" (click)="auth.logout()">Log out</button>
+      </div>
+    }
+  </header>
+
+  <main class="layout">
+    <div class="primary-pane">
+      @if (auth.isAuthenticated()) {
+        <app-quote-create (created)="onQuoteCreated($event)" />
+      } @else {
+        <app-login />
+      }
+      <app-quote-list [selectedId]="selectedId()" (select)="selectedId.set($event)" />
+    </div>
+    <aside class="detail-pane">
+      <app-quote-detail [selectedId]="selectedId()" />
+    </aside>
+  </main>
+</div>
