@@ -1,0 +1,145 @@
+.quote-list {
+  min-width: 0;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pagination button {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: var(--surface-hover);
+  border-color: var(--border-hover);
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.page-info {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.page-size {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.page-size select {
+  appearance: none;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.6rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.page-size select:hover {
+  border-color: var(--border-hover);
+}
+
+.state {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: var(--text-dim);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.state-error {
+  color: var(--danger);
+  background: var(--danger-soft);
+  border-color: rgba(255, 107, 129, 0.35);
+}
+
+.quotes {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.quote {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 0.9rem 1.1rem;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    transform 0.1s ease;
+}
+
+.quote:hover {
+  border-color: var(--border-hover);
+  background: var(--surface-hover);
+}
+
+.quote:active {
+  transform: scale(0.995);
+}
+
+.quote.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 1px var(--accent) inset;
+}
+
+.quote blockquote {
+  margin: 0 0 0.5rem 0;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+.author {
+  margin: 0;
+  font-weight: 600;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+.id {
+  font-weight: 400;
+  color: var(--text-faint);
+}
