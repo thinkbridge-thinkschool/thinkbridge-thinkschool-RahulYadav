@@ -1,0 +1,82 @@
+# Deploys Day-17/quotes-web (Angular 21) to Azure Static Web Apps.
+#
+# The Static Web App now exists: swa-day17-quotesweb, resource group
+# rg-day17-piece1-quotesweb, region eastasia, subscription
+# 4d89877c-3cf4-491f-b999-03c9ff6bc7c3 ("Azure for Students") — its
+# region-restriction policy (sys.regionrestriction) allows eastasia, which
+# is also a supported Microsoft.Web/staticSites region.
+#
+# The AZURE_STATIC_WEB_APPS_API_TOKEN repository secret has been added
+# (deployment token for swa-day17-quotesweb). This workflow will run once
+# pushed to main / triggered via workflow_dispatch.
+name: Day 17 - Deploy quotes-web to Azure Static Web Apps
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Day-17/quotes-web/**'
+      - '.github/workflows/day17-quotes-web-swa.yml'
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened, closed]
+    paths:
+      - 'Day-17/quotes-web/**'
+  workflow_dispatch: {}
+
+jobs:
+  build_and_deploy:
+    if: github.event_name != 'pull_request' || github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    name: Build and deploy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: Day-17/quotes-web/package-lock.json
+
+      - name: Install dependencies
+        working-directory: Day-17/quotes-web
+        run: npm ci
+
+      - name: Build (production)
+        working-directory: Day-17/quotes-web
+        run: npx ng build --configuration production
+
+      - name: Run unit tests
+        working-directory: Day-17/quotes-web
+        run: npx ng test --watch=false
+
+      - name: Deploy to Azure Static Web Apps
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: 'upload'
+          # With skip_app_build: true, app_location IS the build output
+          # folder (per Microsoft's docs) — it is NOT combined with
+          # output_location the way it is for an Oryx-built app.
+          # output_location must be left empty in this mode.
+          app_location: 'Day-17/quotes-web/dist/quotes-web/browser'
+          output_location: ''
+          skip_app_build: true
+
+  close_pull_request:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    name: Close pull request
+    steps:
+      - name: Close pull request
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          action: 'close'
