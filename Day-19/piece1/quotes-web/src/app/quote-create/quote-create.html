@@ -1,0 +1,54 @@
+<section class="quote-create">
+  <h2 id="quote-create-heading">Add a quote</h2>
+
+  <form
+    [formRoot]="quoteForm"
+    aria-labelledby="quote-create-heading"
+    [attr.aria-busy]="quoteForm().submitting() ? 'true' : null"
+  >
+    <div class="field">
+      <label for="quote-author">Author</label>
+      <input
+        id="quote-author"
+        type="text"
+        [formField]="quoteForm.author"
+        [attr.aria-invalid]="quoteForm.author().invalid() && quoteForm.author().touched() ? 'true' : null"
+        [attr.aria-describedby]="quoteForm.author().invalid() && quoteForm.author().touched() ? 'quote-author-error' : null"
+      />
+      @if (quoteForm.author().invalid() && quoteForm.author().touched()) {
+        <p class="field-error" id="quote-author-error">
+          <span class="field-error-icon" aria-hidden="true">&#9888;</span>
+          Error: {{ authorErrorMessage() }}
+        </p>
+      }
+    </div>
+
+    <div class="field">
+      <label for="quote-text">Text</label>
+      <textarea
+        id="quote-text"
+        rows="4"
+        [formField]="quoteForm.text"
+        [attr.aria-invalid]="quoteForm.text().invalid() && quoteForm.text().touched() ? 'true' : null"
+        [attr.aria-describedby]="quoteForm.text().invalid() && quoteForm.text().touched() ? 'quote-text-error' : null"
+      ></textarea>
+      @if (quoteForm.text().invalid() && quoteForm.text().touched()) {
+        <p class="field-error" id="quote-text-error">
+          <span class="field-error-icon" aria-hidden="true">&#9888;</span>
+          Error: {{ textErrorMessage() }}
+        </p>
+      }
+    </div>
+
+    @if (submitErrorMessage()) {
+      <p class="field-error submit-error" id="quote-create-error" role="alert">
+        <span class="field-error-icon" aria-hidden="true">&#9888;</span>
+        Error: {{ submitErrorMessage() }}
+      </p>
+    }
+
+    <button type="submit" [disabled]="quoteForm().submitting()">
+      {{ quoteForm().submitting() ? 'Adding…' : 'Add quote' }}
+    </button>
+  </form>
+</section>
