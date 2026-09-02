@@ -1,0 +1,12 @@
+<main class="layout">
+  <div class="primary-pane">
+    <a class="new-quote-link" routerLink="/quotes/new">+ Add a quote</a>
+    <app-quote-list [selectedId]="selectedId()" (select)="onSelect($event)" />
+  </div>
+  <aside class="detail-pane">
+    <router-outlet (activate)="detailActive.set(true)" (deactivate)="detailActive.set(false)" />
+    @if (!detailActive()) {
+      <p class="state state-empty">Select a quote from the list to see its details.</p>
+    }
+  </aside>
+</main>
