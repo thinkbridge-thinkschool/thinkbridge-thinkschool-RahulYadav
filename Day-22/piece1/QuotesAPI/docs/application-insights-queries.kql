@@ -1,0 +1,104 @@
+// ============================================================
+// QuotesApi — Application Insights / Log Analytics KQL queries
+//
+// Run these in the Application Insights resource's "Logs" blade
+// (Azure Portal -> quotes-api-insights -> Logs), or against the
+// backing Log Analytics workspace (quotes-api-workspace).
+//
+// These queries have NOT been run against a live Application
+// Insights resource in this environment (no Azure resource has
+// been provisioned here — see docs/azure-monitor.md). Syntax has
+// been checked against the current Application Insights table
+// schema (requests / traces / dependencies / exceptions), but
+// results have not been verified against real data.
+// ============================================================
+
+
+// ------------------------------------------------------------
+// 1. Structured logs for a specific user (UserId custom dimension)
+//
+// Populated by the structured log in
+// Extensions/QuoteEndpointExtensions.cs:
+//   logger.LogInformation("Created quote {QuoteId} for user {UserId}", ...)
+// ------------------------------------------------------------
+traces
+| where timestamp > ago(15m)
+| where customDimensions.UserId == "abc"
+| order by timestamp asc
+
+
+// ------------------------------------------------------------
+// 2. Recent requests (last 30 minutes)
+// ------------------------------------------------------------
+requests
+| where timestamp > ago(30m)
+| order by timestamp desc
+| project timestamp, name, resultCode, duration, success, operation_Id
+
+
+// ------------------------------------------------------------
+// 3. POST /api/quotes requests only
+// ------------------------------------------------------------
+requests
+| where timestamp > ago(1h)
+| where name contains "POST /api/quotes"
+| order by timestamp desc
+| project timestamp, name, resultCode, duration, success, operation_Id
+
+
+// ------------------------------------------------------------
+// 4. Average response time for POST /api/quotes
+//
+// NOTE: Application Insights `requests.duration` is already in
+// MILLISECONDS (not a timespan/ticks value), so no unit
+// conversion is required here. This is the same query the
+// response-time alert (see docs/azure-monitor.md) is built on.
+// ------------------------------------------------------------
+requests
+| where timestamp > ago(1h)
+| where name contains "POST /api/quotes"
+| summarize AvgDurationMs = avg(duration), RequestCount = count() by bin(timestamp, 5m)
+| order by timestamp asc
+
+
+// ------------------------------------------------------------
+// 5. Failed requests (non-2xx / non-success)
+// ------------------------------------------------------------
+requests
+| where timestamp > ago(1h)
+| where success == false
+| order by timestamp desc
+| project timestamp, name, resultCode, duration, operation_Id
+
+
+// ------------------------------------------------------------
+// 6. Exceptions
+// ------------------------------------------------------------
+exceptions
+| where timestamp > ago(1h)
+| order by timestamp desc
+| project timestamp, type, outerMessage, method, operation_Id
+
+
+// ------------------------------------------------------------
+// 7. Dependencies (EF Core / SQLite, outbound HttpClient calls)
+// ------------------------------------------------------------
+dependencies
+| where timestamp > ago(1h)
+| order by timestamp desc
+| project timestamp, name, type, target, duration, success, operation_Id
+
+
+// ------------------------------------------------------------
+// 8. Custom "application-processing" span
+//
+// Confirms the custom ActivitySource("QuotesApi") span still
+// exports to Application Insights as a dependency/span with its
+// tags (application.component, http.method, http.path) present
+// as custom dimensions.
+// ------------------------------------------------------------
+dependencies
+| where timestamp > ago(1h)
+| where name == "application-processing"
+| project timestamp, name, customDimensions, operation_Id
+| order by timestamp desc
